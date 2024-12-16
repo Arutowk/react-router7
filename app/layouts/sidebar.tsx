@@ -2,7 +2,9 @@ import { Form, Link, Outlet } from "react-router";
 import { getContacts } from "../data";
 import type { Route } from "./+types/sidebar";
 
-export async function clientLoader() {
+//you can still use clientLoader (and clientAction) to do client-side data fetching where you see fit
+//switch to using loader, which is used to fetch data on the server.
+export async function loader() {
   const contacts = await getContacts();
   return { contacts };
 }
