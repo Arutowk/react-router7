@@ -16,6 +16,16 @@ export async function clientLoader() {
   return { contacts };
 }
 
+//provide a fallback that will show up before the app is hydrated (rendering on the client for the first time)
+export function HydrateFallback() {
+  return (
+    <div id="loading-splash">
+      <div id="loading-splash-spinner" />
+      <p>Loading, please wait...</p>
+    </div>
+  );
+}
+
 //React Router generates types for each route in your app to provide automatic type safety.
 export default function App({ loaderData }: Route.ComponentProps) {
   const { contacts } = loaderData;
