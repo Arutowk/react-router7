@@ -1,6 +1,4 @@
 import {
-  Form,
-  Link,
   Outlet,
   Scripts,
   ScrollRestoration,
@@ -9,12 +7,6 @@ import {
 import type { Route } from "./+types/root";
 
 import appStylesHref from "./app.css?url";
-import { getContacts } from "./data";
-
-export async function clientLoader() {
-  const contacts = await getContacts();
-  return { contacts };
-}
 
 //provide a fallback that will show up before the app is hydrated (rendering on the client for the first time)
 export function HydrateFallback() {
