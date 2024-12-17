@@ -4,8 +4,11 @@ import type { Route } from "./+types/sidebar";
 
 //you can still use clientLoader (and clientAction) to do client-side data fetching where you see fit
 //switch to using loader, which is used to fetch data on the server.
-export async function loader() {
-  const contacts = await getContacts();
+export async function loader({ request }: Route.LoaderArgs) {
+  //loader functions have access to the search params from the request.
+  const url = new URL(request.url);
+  const q = url.searchParams.get("q");
+  const contacts = await getContacts(q);
   return { contacts };
 }
 
@@ -22,6 +25,7 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
           <Link to="about">React Router Contacts</Link>
         </h1>
         <div>
+          {/* React Router emulates the browser by serializing the FormData into the URLSearchParams instead of the request body. */}
           <Form id="search-form" role="search">
             <input
               aria-label="Search contacts"
