@@ -1,9 +1,15 @@
-import { Form } from "react-router";
-
-import { getContact } from "../data";
-
+import { Form, useFetcher } from "react-router";
 import type { ContactRecord } from "../data";
 import type { Route } from "./+types/contact";
+
+import { getContact, updateContact } from "../data";
+
+export async function action({ params, request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  return updateContact(params.contactId, {
+    favorite: formData.get("favorite") === "true",
+  });
+}
 
 //URL params are passed to the loader with keys that match the dynamic segment.
 export async function loader({ params }: Route.LoaderArgs) {
@@ -78,10 +84,12 @@ export default function Contact({ loaderData }: Route.ComponentProps) {
 }
 
 function Favorite({ contact }: { contact: Pick<ContactRecord, "favorite"> }) {
+  // It allows us to communicate with actions and loaders without causing a navigation.
+  const fetcher = useFetcher();
   const favorite = contact.favorite;
 
   return (
-    <Form method="post">
+    <fetcher.Form method="post">
       <button
         aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
         name="favorite"
@@ -89,6 +97,6 @@ function Favorite({ contact }: { contact: Pick<ContactRecord, "favorite"> }) {
       >
         {favorite ? "★" : "☆"}
       </button>
-    </Form>
+    </fetcher.Form>
   );
 }
