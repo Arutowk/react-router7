@@ -1,4 +1,4 @@
-import { Form, Link, NavLink, Outlet } from "react-router";
+import { Form, Link, NavLink, Outlet, useNavigation } from "react-router";
 import { getContacts } from "../data";
 import type { Route } from "./+types/sidebar";
 
@@ -12,6 +12,8 @@ export async function loader() {
 //React Router generates types for each route in your app to provide automatic type safety.
 export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   const { contacts } = loaderData;
+  //useNavigation returns the current navigation state: it can be one of "idle", "loading" or "submitting".
+  const navigation = useNavigation();
 
   return (
     <>
@@ -64,7 +66,12 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
           )}
         </nav>
       </div>
-      <div id="detail">
+      {/* Adds a nice fade after a short delay (to avoid flickering the UI for fast loads).  */}
+      {/* You could do anything you want though, like show a spinner or loading bar across the top. */}
+      <div
+        className={navigation.state === "loading" ? "loading" : ""}
+        id="detail"
+      >
         <Outlet />
       </div>
     </>
