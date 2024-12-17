@@ -51,10 +51,12 @@ export default function Contact({ loaderData }: Route.ComponentProps) {
         {contact.notes ? <p>{contact.notes}</p> : null}
 
         <div>
+          {/* <Form> prevents the default browser behavior of sending a new document POST request to the server */}
+          {/*  but instead emulates the browser by creating a POST request with client side routing and fetch */}
+          {/* "action"name in <Form/> means a redirect,matches the new route at contacts/:contactId/destroy and sends it the request*/}
           <Form action="edit">
             <button type="submit">Edit</button>
           </Form>
-
           <Form
             action="destroy"
             method="post"
