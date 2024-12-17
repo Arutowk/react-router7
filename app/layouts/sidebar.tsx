@@ -1,4 +1,11 @@
-import { Form, Link, NavLink, Outlet, useNavigation } from "react-router";
+import {
+  Form,
+  Link,
+  NavLink,
+  Outlet,
+  useNavigation,
+  useSubmit,
+} from "react-router";
 import { useEffect } from "react";
 
 import { getContacts } from "../data";
@@ -19,6 +26,7 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   const { contacts, q } = loaderData;
   //useNavigation returns the current navigation state: it can be one of "idle", "loading" or "submitting".
   const navigation = useNavigation();
+  const submit = useSubmit();
 
   // also can do this as a controlled component. You will have more synchronization points
   useEffect(() => {
@@ -36,7 +44,12 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
         </h1>
         <div>
           {/* React Router emulates the browser by serializing the FormData into the URLSearchParams instead of the request body. */}
-          <Form id="search-form" role="search">
+          <Form
+            id="search-form"
+            //filter as the user types
+            onChange={(event) => submit(event.currentTarget)}
+            role="search"
+          >
             <input
               aria-label="Search contacts"
               defaultValue={q || ""}
