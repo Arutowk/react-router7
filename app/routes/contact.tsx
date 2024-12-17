@@ -86,7 +86,9 @@ export default function Contact({ loaderData }: Route.ComponentProps) {
 function Favorite({ contact }: { contact: Pick<ContactRecord, "favorite"> }) {
   // It allows us to communicate with actions and loaders without causing a navigation.
   const fetcher = useFetcher();
-  const favorite = contact.favorite;
+  const favorite = fetcher.formData
+    ? fetcher.formData.get("favorite") === "true"
+    : contact.favorite;
 
   return (
     <fetcher.Form method="post">
