@@ -27,6 +27,9 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   //useNavigation returns the current navigation state: it can be one of "idle", "loading" or "submitting".
   const navigation = useNavigation();
   const submit = useSubmit();
+  const searching =
+    navigation.location &&
+    new URLSearchParams(navigation.location.search).has("q");
 
   // also can do this as a controlled component. You will have more synchronization points
   useEffect(() => {
@@ -52,13 +55,14 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
           >
             <input
               aria-label="Search contacts"
+              className={searching ? "loading" : ""}
               defaultValue={q || ""}
               id="q"
               name="q"
               placeholder="Search"
               type="search"
             />
-            <div aria-hidden hidden={true} id="search-spinner" />
+            <div aria-hidden hidden={!searching} id="search-spinner" />
           </Form>
           <Form method="post">
             <button type="submit">New</button>
@@ -97,7 +101,9 @@ export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
       {/* Adds a nice fade after a short delay (to avoid flickering the UI for fast loads).  */}
       {/* You could do anything you want though, like show a spinner or loading bar across the top. */}
       <div
-        className={navigation.state === "loading" ? "loading" : ""}
+        className={
+          navigation.state === "loading" && !searching ? "loading" : ""
+        }
         id="detail"
       >
         <Outlet />
