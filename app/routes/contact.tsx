@@ -1,16 +1,22 @@
 import { Form } from "react-router";
 
-import type { ContactRecord } from "../data";
+import { getContact } from "../data";
 
-export default function Contact() {
-  const contact = {
-    first: "Your",
-    last: "Name",
-    avatar: "https://placecats.com/200/200",
-    twitter: "your_handle",
-    notes: "Some notes",
-    favorite: true,
-  };
+import type { ContactRecord } from "../data";
+import type { Route } from "./+types/contact";
+
+//URL params are passed to the loader with keys that match the dynamic segment.
+export async function loader({ params }: Route.LoaderArgs) {
+  const contact = await getContact(params.contactId);
+  //if the user isn't found, code execution down this path stops and React Router renders the error path instead.
+  if (!contact) {
+    throw new Response("Not Found", { status: 404 });
+  }
+  return { contact };
+}
+
+export default function Contact({ loaderData }: Route.ComponentProps) {
+  const { contact } = loaderData;
 
   return (
     <div id="contact">
